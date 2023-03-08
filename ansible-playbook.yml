@@ -1,0 +1,19 @@
+---
+# 需要执行 dns yum ntp 服务，需要单独取消该注释。fluent 安装更新，需要放开 action: install,卸载需要放开 action: uninstall
+
+- hosts: client_hosts
+#  gather_facts: false  
+  remote_user: root
+  roles:
+#  - { role: dns }
+#  - { role: selinux }
+#  - { role: yum }
+#  - { role: firewall }
+#  - { role: packages }
+#  - { role: ntp }
+#  - { role: zabbix-agent }
+  - { role: filebeat }
+#  - { role: hostname }
+#  - { role: sshd_config }
+#  - { role: fluent, action: install }
+#  - { role: sssd }

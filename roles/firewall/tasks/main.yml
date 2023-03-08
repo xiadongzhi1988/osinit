@@ -1,0 +1,21 @@
+---
+# tasks file for firewall
+
+- firewalld:
+    zone: public
+    port: 10050/tcp
+    permanent: yes
+    state: enabled
+
+- firewalld:
+    zone: public
+    port: 60020/tcp
+    permanent: yes
+    state: enabled
+
+- name: reload firewalld
+  service:
+    name: firewalld
+    state: reloaded
+
+

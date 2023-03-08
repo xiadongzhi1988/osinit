@@ -1,0 +1,16 @@
+---
+# tasks file for yum
+- name: Add  repositories into the same file
+  yum_repository: 
+    name: '{{ item.src }}'
+    description: '{{ item.src }}' 
+    baseurl: '{{ item.baseurl }}'
+    enabled: yes
+    gpgcheck: no
+    file: '{{ item.file }}'
+  with_items:
+    - { src: 'centos7.7', baseurl: 'http://{{ yumserverip }}/centos7.7/', file: 'centos7.7' }
+    - { src: 'docker-ce', baseurl: 'http://{{ yumserverip }}/docker-ce/', file: 'docker-ce' }
+    - { src: 'monitor', baseurl: 'http://{{ yumserverip }}/monitor/', file: 'monitor' }
+    - { src: 'tools', baseurl: 'http://{{ yumserverip }}/tools/', file: 'tools' }
+

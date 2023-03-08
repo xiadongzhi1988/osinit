@@ -1,0 +1,4 @@
+---
+# vars file for dns
+nameserver1: 100.65.38.11
+nameserver2: 100.65.38.12

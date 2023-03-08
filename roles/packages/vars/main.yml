@@ -1,0 +1,4 @@
+---
+# packages vars
+#list_of_packages: ['sysstat','tcpdump','telnet','vim','blktrace','dstat','hpssacli','hpssascripting','iftop','iostat','iperf','lrzsz','mcelog','megacil','mpstat','nethogs','nmap','perf','ss','strace','iotop','netools','lsof','openldap-clients','nss-pam-ldapd','pam_ldap'] 
+list_of_packages: ['unzip','tree','sysstat','tcpdump','telnet','vim','blktrace','dstat','strace','iotop','net-tools','lsof','openldap-clients','nss-pam-ldapd','pam_ldap']

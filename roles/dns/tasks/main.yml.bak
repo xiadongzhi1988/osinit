@@ -1,0 +1,18 @@
+---
+# tasks file for dns
+
+- name: delete dns configure regexp line
+#  template: src=resolv.conf.c{{ ansible_distribution_major_version }}.j2 dest=/etc/resolv.conf backup=yes
+  lineinfile:
+    path: /etc/resolv.conf
+    regexp: '{{ item.regexp }}'
+    state: absent
+  with_items: 
+    - regexp: "^nameserver[ ]*{{ nameserver1 }}"
+    - regexp: "^nameserver[ ]*{{ nameserver2 }}"
+
+- name: add dns configure line
+  blockinfile:
+    path: /etc/resolv.conf
+    block: "nameserver {{ nameserver1 }}\nnameserver {{ nameserver2 }}"
+  

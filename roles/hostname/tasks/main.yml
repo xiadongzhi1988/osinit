@@ -1,0 +1,9 @@
+---
+# tasks file for hostname
+
+#- hostname:
+#  name: 502_c14_3205.cephpoc.com111
+
+- name: set hostname
+  shell: "hostnamectl set-hostname {{ hostname }}"
+

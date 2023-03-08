@@ -1,0 +1,29 @@
+[domain/default] 
+autofs_provider = ldap 
+cache_credentials = False 
+ldap_search_base = {{ ldap_search_base }} 
+id_provider = ldap 
+auth_provider = ldap 
+chpass_provider = ldap 
+ldap_id_use_start_tls = True 
+ldap_tls_cacertdir = /etc/openldap/cacerts
+ldap_uri = {{ ldap_uri }}
+ldap_default_bind_dn = {{ ldap_default_bind_dn }}
+ldap_default_authtok = {{ ldap_default_authtok }} 
+ldap_tls_reqcert = allow 
+ldap_schema = rfc2307bis 
+ldap_group_member = {{ ldap_group_member }} 
+ldap_group_nesting_level = 3
+access_provider = ldap
+
+[sssd]
+services = nss, pam, autofs
+domains = default
+
+[nss]
+homedir_substring = /home
+
+[pam]
+
+[autofs]
+

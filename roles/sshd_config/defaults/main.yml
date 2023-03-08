@@ -1,0 +1,12 @@
+---
+# defaults file for sshd_config
+passwd_: "PasswordAuthentication no"
+pubkey_: "PubkeyAuthentication no"
+match_user_ips: "Match User root  Address 10.127.64.26,10.127.64.27,10.127.0.41,10.127.0.42,10.127.67.11"
+passwd_root: "  PasswordAuthentication yes"
+pubkey_root: "  PubkeyAuthentication yes"
+math_common_user_ips: "Match User *,!root Address 10.127.64.51,10.127.64.26,10.127.64.27,10.127.0.41,10.127.0.42,10.127.67.11"
+passwd_common: "  PasswordAuthentication yes"
+pubkey_common: "  PubkeyAuthentication yes"
+match_all: "Match all"
+

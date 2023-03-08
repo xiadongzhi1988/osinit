@@ -1,0 +1,31 @@
+---
+# handlers file for fluent
+- name: restart fluentd
+  systemd:
+    daemon_reload: yes
+    enabled: yes
+    name: "{{ fluentd_name }}"
+    state: restarted
+
+- name: restart rsyslog
+  systemd:
+    name: rsyslog
+    state: restarted
+
+- name: reload td-agent
+  systemd:
+    name: "{{ fluentd_name }}"
+    state: reloaded
+
+
+- name: fluentd clear
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ fluentd_clear_dir }}"
+
+- name: restart rsyslog
+  systemd:
+    name: rsyslog
+    state: restarted

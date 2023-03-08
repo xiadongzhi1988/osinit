@@ -1,0 +1,7 @@
+---
+# tasks file for packages
+- name: Ensure a list of packages installed
+  yum: 
+    name:  "{{ list_of_packages }}"
+    state: present
+  

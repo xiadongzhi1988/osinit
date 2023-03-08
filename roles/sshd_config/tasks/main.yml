@@ -1,0 +1,47 @@
+---
+# tasks file for sshd_config
+- name: backup sshd_config
+  shell: cp /etc/ssh/sshd_config /etc/ssh/sshd_config_`date +%Y%m%d%H%M%S`
+
+- name: update sshd_config file
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '{{ item.regexp }}'
+    state: absent
+  with_items:
+    - regexp: "^[ ]*PasswordAuthentication*"
+    - regexp: "^[ ]*PubkeyAuthentication*"
+    - regexp: "^ListenAddress"
+    - regexp: "^[ ]*Match User*"
+    - regexp: "^[ ]*Match all*"
+
+- name: add ssh match root users ips
+  shell: echo -e  "ListenAddress {{ manage_ip }} \n{{ passwd_ }}\n{{ pubkey_ }}\n{{ match_user_ips }}\n{{ passwd_root }}\n{{ pubkey_root }}" >> /etc/ssh/sshd_config
+  when: ssh_exten_root_sip is not defined
+
+- name: add ssh match not root users ips
+  shell: echo -e  "{{ math_common_user_ips }}\n{{ passwd_common }}\n{{ pubkey_common }}\n{{ match_all }}" >> /etc/ssh/sshd_config
+  when: ssh_exten_not_root_sip is not defined
+
+- name: add ssh match root users ips and exten ips
+  shell: echo -e  "ListenAddress {{ manage_ip }}\n{{ passwd_ }}\n{{ pubkey_ }}\n{{ match_user_ips }},{{ ssh_exten_root_sip }}\n{{ passwd_root }}\n{{ pubkey_root }}" >> /etc/ssh/sshd_config
+  when: ssh_exten_root_sip is defined
+
+
+- name: add ssh match not root users ips and exten ips
+  shell: echo -e  "{{ math_common_user_ips }},{{ ssh_exten_not_root_sip }}\n{{ passwd_common }}\n{{ pubkey_common }}\n{{ match_all }}" >> /etc/ssh/sshd_config
+  when: ssh_exten_not_root_sip is defined
+
+
+- name: check sshd_config
+  shell: sshd -t 
+  register: result
+
+- name: restart sshd
+  systemd: 
+    name: sshd
+    state: restarted
+    daemon_reload: yes
+  when: result.stderr == ''
+
+

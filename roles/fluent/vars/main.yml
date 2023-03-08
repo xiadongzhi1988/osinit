@@ -1,0 +1,5 @@
+---
+# vars file for fluent
+fluentd_user: "fluentd_agent"
+fluentd_pwd: "welcome001"
+fluentd_elastic_hosts: "10.127.96.21:9200,10.127.96.22:9200,10.127.96.23:9200"

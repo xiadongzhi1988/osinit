@@ -1,0 +1,81 @@
+---
+# tasks file for fluent
+- name: install depend package
+  yum:
+    name: "{{ fluentd_depend_pkg }}"
+    state: present
+  when:
+    - action == "install"
+
+- name: install td-agent service
+  yum: 
+    name: "{{ fluentd_name }}"
+    state: present
+  notify:
+    - restart fluentd
+  when:
+    - action == "install"
+
+- name: fluentd-create conf directory
+  file:
+    path: /etc/{{ fluentd_name }}/conf.d
+    state: directory
+  when:
+    - action == "install"
+
+- name: fluentd-copy main configuration
+  copy:
+    src: fluentd.conf
+    dest: /etc/{{ fluentd_name }}/{{ fluentd_name }}.conf
+  notify:
+    - restart fluentd
+  when:
+    - action == "install"
+
+# monitor
+
+- name: syslog custom config
+  copy:
+    src: push2fluentd.conf
+    dest: /etc/rsyslog.d/push2fluentd.conf
+  notify:
+    - restart rsyslog
+  when:
+    - action == "install"
+
+- name: custom fluentd
+  template:
+    src: custom.j2
+    dest: /etc/{{ fluentd_name }}/conf.d/custom.conf
+  notify:
+    - reload td-agent
+  when:
+    - action == "install"
+
+- name: stop fluentd
+  systemd:
+    name: "{{ fluentd_name }}"
+    state: stopped
+  when:
+    - action == "uninstall"
+
+- name: fluentd uninstall
+  yum:
+    name: "{{ fluentd_name }}"
+    state: absent
+  notify:
+    - fluentd clear
+  when:
+    - action == "uninstall"
+
+- name: stop syslog push
+  lineinfile:
+    path: /etc/rsyslog.conf
+    regexp: '127.0.0.1:5140$'
+    line: ''
+    state: present
+  notify:
+    - restart rsyslog
+  when:
+    - action == "uninstall"
+

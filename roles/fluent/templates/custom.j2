@@ -1,0 +1,72 @@
+
+<system>
+  log_level info
+</system>
+
+<source>
+  @type syslog
+  port 5140
+  bind 0.0.0.0
+  tag td
+  message_length_limit 2048
+  <parse>
+    @type syslog
+  </parse>
+</source>
+
+<filter td.**>
+  @type record_transformer
+  enable_ruby true
+  <record>
+    iplist "#{(Socket.ip_address_list.find_all do |m|m.ipv4_private? end).collect do |n|n.ip_address end}"
+    log_type ${tag_parts[1]}
+    log_priority ${tag_parts[2]}
+  </record>
+</filter>
+
+<filter td.**>
+  @type elasticsearch_genid
+  hash_id_key _hash    # storing generated hash id key (default is _hash)
+</filter>
+
+<match td.**>
+  @type rewrite_tag_filter
+  <rule>
+    key log_type
+    pattern /^(.+)$/
+    tag system.$1
+  </rule>
+</match>
+
+# 配置很重要，别使用默认参数
+<match system.**>
+  @type elasticsearch
+  hosts {{ fluentd_elastic_hosts }}
+  user {{ fluentd_user }}
+  password {{ fluentd_pwd }}
+  logstash_format true
+  logstash_prefix fluentd.${tag}
+  id_key _hash
+  remove_keys _hash
+  request_timeout 300s
+  reload_connections false
+  reload_on_failure true
+  reconnect_on_error true
+  verify_es_version_at_startup false
+  default_elasticsearch_version 6
+  with_transporter_log false
+  bulk_message_request_threshold -1
+  <buffer tag>
+    @type file
+    path "/var/log/td-agent/buffer-elastic2"
+    total_limit_size 1G
+    chunk_limit_size 10M
+    flush_mode interval
+    flush_interval 60s
+    flush_thread_count 4
+    queued_chunks_limit_size 4
+    retry_max_times 14
+    retry_wait 5s
+    disable_chunk_backup true
+  </buffer>
+</match>

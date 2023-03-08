@@ -1,0 +1,9 @@
+---
+# vars file for sssd
+ldap_search_base: "dc=china,dc=com"
+ldap_uri: "ldaps://china.com:636/"
+ldap_default_bind_dn: "cn=root,dc=com" 
+ldap_default_authtok: "123456" 
+ldap_group_nesting_level: 3 
+ldap_group_member: "member" 
+

@@ -1,0 +1,24 @@
+- name: install zabbix-agent
+  yum:
+    name:
+      - zabbix-agent
+    state: installed
+- name: push conf
+  copy:
+    src: "{{ item }}"
+    dest: /etc/zabbix/zabbix_agentd.d/
+  with_items:
+    - zabbix_agentd.d/linux_custom.conf
+#    - zabbix_agentd.d/userparameter_elastic.conf
+#    - zabbix_agentd.d/userparameter_mysql.conf
+  notify: restart zabbix-agent
+- name: push zabbix-agent.conf
+  template:
+    src: zabbix_agentd.conf.j2
+    dest: /etc/zabbix/zabbix_agentd.conf
+  notify: restart zabbix-agent
+- name: start zabbix-agent
+  service:
+    name: zabbix-agent
+    state: started
+    enabled: yes

@@ -1,0 +1,19 @@
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+    - /var/log/messages
+  tags: ["messages"]
+setup.template.settings:
+  index.number_of_shards: 1
+setup.kibana:
+  host: "100.65.36.15:5601"
+output.elasticsearch:
+  hosts: ["100.65.36.15:9200","100.65.36.16:9200","100.65.36.17:9200"]
+  indices:
+    - index: "messages-%{+yyyy.MM.dd}"
+      when.contains:
+        tags: "messages"
+setup.template.enabled: false
+setup.template.overwrite: true
+setup.ilm.enabled: false

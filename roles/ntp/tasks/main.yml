@@ -1,0 +1,35 @@
+---
+# tasks file for ntp
+- name: yum remove ntp
+  shell: 'yum remove -y ntp'
+  args:
+    warn: false
+  ignore_errors: true
+
+
+- name: install chronyd package
+  yum: 
+    name: chrony 
+    state: present
+
+- name: start chronyd service
+  service: 
+    name: chronyd 
+    state: started 
+    enabled: true
+
+- name: delete regexp line 
+  lineinfile:
+    path: /etc/chrony.conf
+    regexp: '{{ item.regexp }}'
+    state: absent
+  with_items:
+    - regexp: "^server[ ]*{{ ip1 }}[ ]*iburst"
+    - regexp: "^server[ ]*{{ ip2 }}[ ]*iburst"
+    - regexp: "^server [0-3].centos.pool.ntp.org iburst"
+
+- name: add configuration line
+  blockinfile:
+    path: /etc/chrony.conf
+    block: "server {{ ip1 }} iburst\nserver {{ ip2 }} iburst"   
+  notify: restart chronyd service

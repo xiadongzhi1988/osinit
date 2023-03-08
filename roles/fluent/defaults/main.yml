@@ -1,0 +1,8 @@
+---
+# defaults file for fluent
+fluentd_name: td-agent
+fluentd_depend_pkg: redhat-lsb-core,libcurl-devel
+fluentd_elastic_hosts: ""
+fluentd_user: ""
+fluentd_pwd: ""
+fluentd_clear_dir: /var/log/td-agent

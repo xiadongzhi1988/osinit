@@ -1,0 +1,4 @@
+---
+# vars file for yum
+yum_repo_file: centos7.7
+yumserverip: '100.65.38.11'
